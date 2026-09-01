@@ -1,0 +1,29 @@
+# Render Blueprint (render.yaml)
+# Push this repo to GitHub, then in Render: New -> Blueprint -> connect the repo.
+# Render reads this file automatically and sets up the cron job below.
+#
+# Env vars (GROQ_API_KEY, TIKTOK_ACCESS_TOKEN, SUPABASE_URL, SUPABASE_KEY)
+# are marked sync: false so Render prompts you to enter them in the
+# dashboard instead of storing secrets in this file / GitHub.
+
+services:
+  - type: cron
+    name: dark-quote-pipeline
+    runtime: python
+    plan: free
+    schedule: "0 9 * * *"   # 9:00 AM UTC daily — edit to your preferred time
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python3 pipeline.py"
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: TIKTOK_ACCESS_TOKEN
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: SUPABASE_BUCKET
+        value: media
+      - key: PUBLISH_TO_TIKTOK
+        value: "true"
